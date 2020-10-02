@@ -19,12 +19,22 @@ init();
 
 //TODO
 // Main function. 
-function init() {}
+function init() {
+	populateListPlayers();
+	buttonAdd.addEventListener("click", (e)=>{
+		e.preventDefault();
+		addPlayer();
+	});
+}
 
 //TODO
 // This function adds a new player on the list
 /******************************************************************************/
-function addPlayer() {}
+function addPlayer() {
+
+	const
+
+}
 
 //TODO
 // Checks data from the form fields
