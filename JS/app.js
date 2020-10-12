@@ -31,21 +31,111 @@ function init() {
 // This function adds a new player on the list
 /******************************************************************************/
 function addPlayer() {
+	if (validateForm()){
+		const formPlayer = document.getElementById("frmPlayer");
+		const [dni , name, surname, date, phone, email, account, category] = formPlayer.elements;
 
-	const
+		let newPlayer = [dni.value, name.value, surname.value, date.value, phone.value, email.value, account.value, category.value];
+		players.push(newPlayer);
 
+		document.getElementById("frmPlayer").reset();
+		populateListPlayers();
+
+		alert("Nuevo jugador añadido");
+	}
 }
 
 //TODO
 // Checks data from the form fields
-function validateForm(){}
+function validateForm(){
+
+	const formPlayer = document.getElementById("frmPlayer");
+	const [dni , name, surname, date, phone, email, account, category] = formPlayer.elements;
+	let txtCat = category.options[category.selectedIndex].value;
+
+	if (!validateDNI(dni.value) || dni.value == "" ) {
+		alert("DNI erróneo");
+		return false;
+	}
+	if (name.value == "" ) {
+		alert("Nombre erróneo");
+		return false;
+	}if (surname.value == "" ) {
+		alert("Apellido erróneo");
+		return false;
+	}
+	if (!validateDate(date.value) || date.value == "" ) {
+		alert("Fecha errónea");
+		return false;
+	}
+	if (!validatePhone(phone.value) || phone.value == "" ) {
+		alert("Teléfono erróneo");
+		return false;
+	}
+	if (!validateEmail(email.value) || email.value == "" ) {
+		alert("Email erróneo");
+		return false;
+	}
+	if (account.value == "" ) {
+		alert("Cuenta errónea");
+		return false;
+	}
+	if (!isValidAgePlayer(date.value, 18) && txtCat === "PRO" ) {
+		alert("Mínimo 18");
+		return false;
+	} else if (!isValidAgePlayer(date.value, 16) && txtCat === "BEG") {
+		alert("Mínimo 16");
+		return false;
+	}
+	return true;
+}
 
 //TODO
 // Create two separate lists depens on category. it uses two different containers
-function populateListPlayers() {}
+function populateListPlayers() {
+	containerPlayersBeg.innerHTML = "";
+	containerPlayersPro.innerHTML = "";
+
+	for (let i = 0; i < players.length; i++) {
+		var cat = players[i][7];
+		var info = document.createElement("p");
+		info.className = "playerData";
+
+		var infoNom = document.createElement("span");
+		var infoEmail = document.createElement("span");
+		var infoCat = document.createElement("span");
+		infoNom.classList.add('player-col');
+		infoEmail.classList.add('player-col');
+		infoCat.classList.add('player-col');
+
+		var nodeNom = document.createTextNode(players[i][1] + " " + players[i][2]);
+		var nodeEmail = document.createTextNode(players[i][4]);
+		var nodeCat = document.createTextNode(players[i][7]);
+		infoNom.appendChild(nodeNom);
+		infoEmail.appendChild(nodeEmail);
+		infoCat.appendChild(nodeCat);
+
+		info.appendChild(infoNom);
+		info.appendChild(infoEmail);
+		info.appendChild(infoCat);
+
+		let container = (cat == "BEG" ? containerPlayersBeg : containerPlayersPro);
+		container.appendChild(info);
+
+		
+	}
+}
 
 //TODO
 // This function returns true whether the player is 16 years old (for beginners) or 18 years old (for professionals)
-function isValidAgePlayer(sDate, minAge) {}
+function isValidAgePlayer(sDate, minAge) {
+
+	let aDate = sDate.split("/");
+	let bornDate = new Date(aDate[2], aDate[1] -1, aDate[0]);
+	let currentDate = new Date();
+	let age = diffAnys(currentDate, bornDate);
+
+	return (age >= minAge);
+}
 
 
